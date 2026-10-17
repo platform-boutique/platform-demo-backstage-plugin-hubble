@@ -1,7 +1,21 @@
 import { useState } from 'react';
 import { useApi } from '@backstage/frontend-plugin-api';
-import { Progress, ResponseErrorPanel, Table, TableColumn } from '@backstage/core-components';
-import { Chip, FormControl, Grid, MenuItem, Select, Typography, makeStyles } from '@material-ui/core';
+import { InfoCard, Progress, ResponseErrorPanel } from '@backstage/core-components';
+import {
+  Chip,
+  FormControl,
+  Grid,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+  makeStyles,
+} from '@material-ui/core';
 import useAsyncRetry from 'react-use/esm/useAsyncRetry';
 import useInterval from 'react-use/esm/useInterval';
 import { hubbleApiRef } from '../api';
@@ -35,6 +49,8 @@ export function FlowsTable(props: { namespace?: string; workload?: string; title
   const classes = useStyles();
   const hubble = useApi(hubbleApiRef);
   const [filter, setFilter] = useState('all');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
 
   const state = useAsyncRetry(
     () => hubble.getFlows({ namespace: props.namespace, workload: props.workload, verdicts: VERDICT_FILTERS[filter], limit: 150 }),
@@ -47,16 +63,6 @@ export function FlowsTable(props: { namespace?: string; workload?: string; title
 
   const { flows = [], counts = {} } = state.value ?? {};
   const chipClass = (v: string) => (v === 'FORWARDED' ? classes.forwarded : v === 'DROPPED' || v === 'ERROR' ? classes.dropped : classes.other);
-
-  const columns: TableColumn<FlowSummary>[] = [
-    { title: 'Time', field: 'time', width: '9em', render: f => new Date(f.time).toLocaleTimeString() },
-    { title: 'Verdict', field: 'verdict', width: '8em', render: f => <Chip size="small" className={`${classes.chip} ${chipClass(f.verdict)}`} label={f.verdict} /> },
-    { title: 'From', render: f => <span className={classes.mono}>{who(f.source)}</span> },
-    { title: 'To', render: f => <span className={classes.mono}>{who(f.destination)}</span> },
-    { title: 'Port', field: 'l4', width: '8em' },
-    { title: 'Detail', render: f => f.dropReason ?? f.l7 ?? '' },
-    { title: 'Auth', field: 'authType', width: '7em' },
-  ];
 
   return (
     <Grid container spacing={2}>
@@ -73,22 +79,59 @@ export function FlowsTable(props: { namespace?: string; workload?: string; title
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <Table<FlowSummary>
-          title={props.title}
-          subtitle="Live from Hubble, refreshed every 10 seconds"
-          columns={columns}
-          data={flows}
-          options={{ paging: true, pageSize: 20, pageSizeOptions: [20, 50, 100], search: true, padding: 'dense' }}
-          emptyContent={<Typography style={{ padding: 16 }}>No flows match. Nothing has talked to this workload recently.</Typography>}
-          actions={[]}
-          components={{
-            Toolbar: undefined,
-          }}
-        />
+        <InfoCard title={props.title} subheader="Live from Hubble, refreshed every 10 seconds" noPadding>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>Time</TableCell>
+                <TableCell>Verdict</TableCell>
+                <TableCell>From</TableCell>
+                <TableCell>To</TableCell>
+                <TableCell>Port</TableCell>
+                <TableCell>Detail</TableCell>
+                <TableCell>Auth</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {flows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((f: FlowSummary, i: number) => (
+                <TableRow key={`${f.time}-${i}`} hover>
+                  <TableCell>{new Date(f.time).toLocaleTimeString()}</TableCell>
+                  <TableCell>
+                    <Chip size="small" className={`${classes.chip} ${chipClass(f.verdict)}`} label={f.verdict} />
+                  </TableCell>
+                  <TableCell className={classes.mono}>{who(f.source)}</TableCell>
+                  <TableCell className={classes.mono}>{who(f.destination)}</TableCell>
+                  <TableCell>{f.l4}</TableCell>
+                  <TableCell>{f.dropReason ?? f.l7 ?? ''}</TableCell>
+                  <TableCell>{f.authType ?? ''}</TableCell>
+                </TableRow>
+              ))}
+              {flows.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={7}>
+                    <Typography style={{ padding: 8 }}>No flows match. Nothing has talked to this workload recently.</Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            component="div"
+            count={flows.length}
+            page={page}
+            onPageChange={(_e, p) => setPage(p)}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={e => {
+              setRowsPerPage(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
+            rowsPerPageOptions={[20, 50, 100]}
+          />
+        </InfoCard>
       </Grid>
       <Grid item xs={12}>
         <FormControl size="small">
-          <Select value={filter} onChange={e => setFilter(e.target.value as string)}>
+          <Select value={filter} onChange={e => { setFilter(e.target.value as string); setPage(0); }}>
             <MenuItem value="all">All verdicts</MenuItem>
             <MenuItem value="dropped">Dropped and errors</MenuItem>
             <MenuItem value="forwarded">Forwarded</MenuItem>

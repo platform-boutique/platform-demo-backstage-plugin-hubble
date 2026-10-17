@@ -1,23 +1,17 @@
-site_name: "Backstage plugin - Hubble"
-site_description: "Network flows from Hubble Relay for the platform-demo portal."
+site_name: Backstage plugin - Hubble
+site_description: Network flows from Hubble Relay for the platform-demo portal.
 repo_url: https://github.com/platform-boutique/platform-demo-backstage-plugin-hubble
 edit_uri: edit/main/docs/
-
-plugins:
-  - techdocs-core
-
+nav:
+  - Overview: index.md
+  - How it works: how-it-works.md
+  - Install and configure: install.md
+  - Develop: develop.md
 theme:
   name: material
   features:
     - navigation.sections
     - navigation.top
     - content.code.copy
-
-extra_css:
-  - stylesheets/extra.css
-
-nav:
-  - "Overview": index.md
-  - "How it works": how-it-works.md
-  - "Install and configure": install.md
-  - "Develop": develop.md
+plugins:
+  - techdocs-core
