@@ -1,0 +1,20 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: platform-demo-backstage-plugin-hubble
+  title: Backstage plugin - Hubble / Cilium
+  description: "Network flows from Hubble Relay on every entity of the portal: forwarded and dropped traffic, why it was dropped, whether it was mutually authenticated."
+  annotations:
+    github.com/project-slug: platform-boutique/platform-demo-backstage-plugin-hubble
+    backstage.io/techdocs-ref: dir:.
+  tags: [backstage, plugin, cilium, hubble]
+  links:
+    - { url: "https://github.com/platform-boutique/platform-demo-backstage-plugin-hubble", title: Repository, icon: github }
+spec:
+  type: backstage-plugin
+  lifecycle: experimental
+  owner: group:default/maintainers
+  system: developer-portal
+  subcomponentOf: component:default/platform-demo-backstage
+  dependsOn:
+    - resource:default/hubble
