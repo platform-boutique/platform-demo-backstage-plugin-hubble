@@ -6,10 +6,9 @@ metadata:
   description: "Network flows from Hubble Relay on every entity of the portal: forwarded and dropped traffic, why it was dropped, whether it was mutually authenticated."
   annotations:
     github.com/project-slug: platform-boutique/platform-demo-backstage-plugin-hubble
+    backstage.io/source-location: url:https://github.com/platform-boutique/platform-demo-backstage-plugin-hubble/tree/main/
     backstage.io/techdocs-ref: dir:.
   tags: [backstage, plugin, cilium, hubble]
-  links:
-    - { url: "https://github.com/platform-boutique/platform-demo-backstage-plugin-hubble", title: Repository, icon: github }
 spec:
   type: backstage-plugin
   lifecycle: experimental
