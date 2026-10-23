@@ -1,20 +1,7 @@
 # hubble
 
-Welcome to the hubble plugin!
+Frontend plugin of `@platform-boutique/backstage-plugin-hubble` (Hubble / Cilium): the **Network** tab and page: Hubble flows, drops and why, mutual authentication. It is written for Backstage's new frontend
+system and has a default export, so an app with `app.packages: all` picks it up.
 
-_This plugin was created through the Backstage CLI_
-
-## Getting started
-
-Your plugin has been added to the app in this repository, meaning you'll be able
-to access it by running `yarn start` in the root directory, and then navigating
-to [/hubble](http://localhost:3000/hubble).
-
-This plugin is built with Backstage's [frontend
-system](https://backstage.io/docs/frontend-system/architecture/index), and you
-can find more information about building plugins in the [plugin builder
-documentation](https://backstage.io/docs/frontend-system/building-plugins/index).
-
-You can also serve the plugin in isolation by running `yarn start` in the plugin directory.
-This method of serving the plugin provides quicker iteration speed and a faster startup and hot reloads.
-It is only meant for local development, and the setup for it can be found inside the [/dev](./dev) directory.
+This repository has no Backstage app of its own. The plugin is packed (`yarn pack`) and consumed by `platform-demo-backstage`; see the
+repository README and `docs/` (install and configuration) for how.
