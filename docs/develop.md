@@ -13,13 +13,13 @@ there and rebuild the image.
 
 ## Testing against a cluster
 
-Port-forward Relay and point the config at it:
+With the portal running on a laptop (`yarn start` in `platform-demo-backstage`) and a kubeconfig for the cluster, port-forward Relay and point the config at it:
 
 ```bash
 kubectl -n kube-system port-forward svc/hubble-relay 4245:80
 ```
 
-```yaml title="app-config.dev.yaml (portal)"
+```yaml title="app-config.local.yaml (portal)"
 hubble:
   relayAddress: localhost:4245
 ```

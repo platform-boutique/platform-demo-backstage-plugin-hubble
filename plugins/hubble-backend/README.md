@@ -1,28 +1,12 @@
-# hubble
+# hubble-backend
 
-This plugin backend was templated using the Backstage CLI. You should replace this text with a description of your plugin backend.
+Backend plugin of `@platform-boutique/backstage-plugin-hubble` (Hubble / Cilium); it serves the API under `/api/hubble` for the frontend plugin.
 
-## Installation
-
-This plugin is installed via the `@platform-boutique/backstage-plugin-hubble-backend` package. To install it to your backend package, run the following command:
-
-```bash
-# From your root directory
-yarn --cwd packages/backend add @platform-boutique/backstage-plugin-hubble-backend
-```
-
-Then add the plugin to your backend in `packages/backend/src/index.ts`:
+Add it to a Backstage backend in `packages/backend/src/index.ts`:
 
 ```ts
-const backend = createBackend();
-// ...
 backend.add(import('@platform-boutique/backstage-plugin-hubble-backend'));
 ```
 
-## Development
-
-This plugin backend can be started in a standalone mode from directly in this
-package with `yarn start`. It is a limited setup that is most convenient when
-developing the plugin backend itself.
-
-If you want to run the entire project, including the frontend, run `yarn start` from the root directory.
+This repository has no Backstage app of its own. The plugin is packed (`yarn pack`) and consumed by `platform-demo-backstage`; see the
+repository README and `docs/` (install and configuration) for how.

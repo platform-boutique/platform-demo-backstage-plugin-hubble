@@ -33,5 +33,5 @@ hubble:
 ## What the cluster must allow
 
 - Hubble Relay enabled in Cilium (`hubble.relay.enabled: true`); its client-facing endpoint is plaintext unless you turn on `hubble.relay.tls.server`.
-- The portal's pod can reach `hubble-relay` in `kube-system` (no network policy stands in the way today).
+- The portal's pod can reach `hubble-relay` in `kube-system`. The platform has default-deny network policies; the Backstage chart's CiliumNetworkPolicy (`networkPolicy.enabled`) carries the egress rule for it.
 - Entities carry `backstage.io/kubernetes-label-selector: app.kubernetes.io/name=<workload>` and `backstage.io/kubernetes-namespace`.
